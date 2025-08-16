@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mentormate</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to right, #f5f7fa, #e0eafc);
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      text-align: center;
+      background: #2c3e50;
+      color: white;
+      padding: 30px 15px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+    }
+
+    header h4 {
+      margin-top: 10px;
+      font-weight: normal;
+      font-size: 1.2em;
+    }
+
+    .form-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    table {
+      width: 100%;
+      border-spacing: 12px;
+    }
+
+    td:first-child {
+      text-align: right;
+      font-weight: bold;
+      color: #34495e;
+      width: 40%;
+    }
+
+    td:last-child {
+      text-align: left;
+      width: 60%;
+    }
+
+    input, select {
+      width: 95%;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    input[type="radio"] {
+      width: auto;
+      margin: 0 6px;
+    }
+
+    .submit-btn {
+      display: inline-block;
+      background-color: #e67e22;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+      text-decoration: none;
+    }
+
+    .submit-btn:hover {
+      background-color: #d35400;
+    }
+
+    .banner-img {
+      margin-top: 20px;
+      width: 100%;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Master new skills to unlock your career potential</h1>
+    <h4>Whether you are just beginning your journey or looking to upskill, we are here to support your growth.</h4>
+  </header>
+
+  <div class="form-container">
+    <form id="mentormateForm">
+      <table>
+        <tr>
+          <td>Name</td>
+          <td><input type="text" id="name" required /></td>
+        </tr>
+        <tr>
+          <td>Age</td>
+          <td><input type="number" id="age" required /></td>
+        </tr>
+        <tr>
+          <td>Phone</td>
+          <td><input type="tel" id="phone" required /></td>
+        </tr>
+        <tr>
+          <td>Email</td>
+          <td><input type="email" id="email" required /></td>
+        </tr>
+        <tr>
+          <td>Address</td>
+          <td><input type="text" id="address" required /></td>
+        </tr>
+        <tr>
+          <td>Gender</td>
+          <td>
+            <input type="radio" name="gender" value="Male"> Male
+            <input type="radio" name="gender" value="Female"> Female
+            <input type="radio" name="gender" value="Other"> Other
+          </td>
+        </tr>
+        <tr>
+          <td>Skills</td>
+          <td>
+            <select id="skills">
+              <option>Web development</option>
+              <option>App development</option>
+              <option>Data science</option>
+              <option>Machine learning</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Counseling</td>
+          <td>
+            <select id="counseling">
+              <option>Health counseling</option>
+              <option>Sports counseling</option>
+              <option>Course choosing counseling</option>
+              <option>Business counseling</option>
+            </select>
+          </td>
+        </tr>
+      </table>
+      <br />
+      <button type="submit" class="submit-btn">
+        <a href="file:///C:/Users/sivam/Desktop/servathon/developed.html">Submit</a>
+      </button>
+      <img src="student photo 2.jpg" alt="Mentormate" class="banner-img">
+    </form>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyByfpskyy4x3466gvDTbziGxV_AMg-H-JA",
+      authDomain: "mentormate-8cd38.firebaseapp.com",
+      projectId: "mentormate-8cd38",
+      storageBucket: "mentormate-8cd38.appspot.com",
+      messagingSenderId: "423225315325",
+      appId: "1:423225315325:web:6024e1ed6a8860f57e5394",
+      measurementId: "G-FHZVV4QEMS",
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Handle form submission
+    document.getElementById("mentormateForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const age = document.getElementById("age").value;
+      const phone = document.getElementById("phone").value;
+      const email = document.getElementById("email").value;
+      const address = document.getElementById("address").value;
+      const gender = document.querySelector('input[name="gender"]:checked')?.value;
+      const skills = document.getElementById("skills").value;
+      const counseling = document.getElementById("counseling").value;
+
+      try {
+        await addDoc(collection(db, "users"), {
+          name,
+          age,
+          phone,
+          email,
+          address,
+          gender,
+          skills,
+          counseling,
+          timestamp: new Date(),
+        });
+        alert("Form submitted successfully!");
+        document.getElementById("mentormateForm").reset();
+      } catch (error) {
+        console.error("Error adding document: ", error);
+        alert("Failed to submit data.");
+      }
+    });
+  </script>
+
+</body>
+</html>

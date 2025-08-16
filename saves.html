@@ -1,0 +1,25 @@
+<form id="mentormateForm">
+    <input type="text" id="name" placeholder="Name" required>
+    <input type="number" id="age" placeholder="Age" required>
+    <button type="submit">Submit</button>
+</form>
+
+<script>
+document.getElementById("mentormateForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    
+    const data = {
+        name: document.getElementById("name").value,
+        age: document.getElementById("age").value
+    };
+
+    const res = await fetch("/submit", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+    alert(result.message || result.error);
+});
+</script>
